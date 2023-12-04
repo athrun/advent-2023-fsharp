@@ -13,9 +13,8 @@ input
   let mutable score = 0
 
   for n in card[0][1..] do
-    match Array.tryFind (fun m -> m = n) card[1] with
-    | Some _ -> score <- if score = 0 then 1 else score * 2
-    | None -> ()
+    Array.tryFind (fun m -> m = n) card[1]
+    |> Option.iter (fun _ -> score <- if score = 0 then 1 else score * 2)
 
   score)
 |> Array.sum // part 1
