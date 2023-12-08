@@ -1,7 +1,7 @@
 open System.Text.RegularExpressions
 
 let input =
-  "4.input.txt"
+  "inputs/4.txt"
   |> System.IO.File.ReadAllLines
   |> Array.map (fun line ->
     line.Split(@"|")
