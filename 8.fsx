@@ -1,6 +1,6 @@
 open System.Text.RegularExpressions
 
-let input = $"inputs/8.txt" |> System.IO.File.ReadAllLines
+let input = "inputs/8.txt" |> System.IO.File.ReadAllLines
 let path = input[0].ToCharArray()
 
 let network =
