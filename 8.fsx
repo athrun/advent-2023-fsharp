@@ -30,7 +30,7 @@ let inline lcm a b =
 travel "AAA" (fun s -> s = "ZZZ") |> printfn "part1: %A"
 
 // Given cycle lengths repeat themselves and are aligned,
-// a LCM will us the answer for part2.
+// a LCM will give us the answer for part2.
 network.Keys
 |> Seq.filter (fun k -> k.EndsWith("A"))
 |> Seq.toArray
