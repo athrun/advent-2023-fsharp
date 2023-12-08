@@ -15,7 +15,7 @@ let getMaxVals s =
 
 let cond = [| 14; 13; 12 |]
 
-let maxVals = "2.input.txt" |> System.IO.File.ReadAllLines |> Array.map getMaxVals
+let maxVals = "inputs/2.txt" |> System.IO.File.ReadAllLines |> Array.map getMaxVals
 
 maxVals
 |> Array.mapi (fun idx vals ->
