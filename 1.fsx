@@ -28,7 +28,7 @@ let validDigits =
 // 4nine7oneighthm -> 48
 // oneight should be read as 8 and not 1
 
-"1.input.txt"
+"inputs/1.txt"
 |> System.IO.File.ReadAllLines
 |> Array.map (fun l ->
   let mutable pos = 0
