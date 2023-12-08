@@ -1,5 +1,5 @@
 let input =
-  "7.input.txt"
+  "inputs/7.txt"
   |> System.IO.File.ReadAllLines
   |> Array.map (fun l -> l.Split ' ')
   |> Array.map (fun v -> v[0], int v[1])
