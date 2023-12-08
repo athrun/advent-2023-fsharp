@@ -1,6 +1,6 @@
 open System.Text.RegularExpressions
 
-let input = "3.input.txt" |> System.IO.File.ReadAllLines
+let input = "inputs/3.txt" |> System.IO.File.ReadAllLines
 
 let getPartNumbers s =
   let pattern = @"(\d+)"
