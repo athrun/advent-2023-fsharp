@@ -2,9 +2,8 @@ open System.Text.RegularExpressions
 open Checked
 open System.Collections.Generic
 
-
 let input =
-  "5.input.txt"
+  "inputs/5.txt"
   |> System.IO.File.ReadAllText
   |> fun txt -> Regex.Split(txt, @"^$", RegexOptions.Multiline)
   |> Array.map (fun seg ->
@@ -200,8 +199,8 @@ maps
           |> Array.iter (fun u ->
             printfn $"Pass: {passi}. Unmatched portion for seed range {sr} -> {u}."
             currentPassQueue.Enqueue(u)))
-            //currentPassQueue |> enqueueOrExtend (u)))
-      (*
+    //currentPassQueue |> enqueueOrExtend (u)))
+    (*
       results
       |> Array.iter (fun i ->
         if i.Length > 0 && i[0].Length > 0 then
