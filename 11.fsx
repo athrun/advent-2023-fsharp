@@ -6,21 +6,16 @@ let input =
 let grid: char array2d =
   Array2D.init input.Length input[0].Length (fun row col -> (input[row][col]))
 
-let expandedRows =
-  [| for i in 0 .. (Array2D.length1 grid) - 1 ->
-       grid[i, 0..] |> Array.forall (fun v -> v = '.') |]
-  |> Array.mapi (fun i v -> i, v)
-  |> Array.filter (fun (_, v) -> v)
-  |> Array.map (fun (i, _) -> int64 i)
+let fe = // find empty rows/cols indexes
+  Array.map (Array.forall (fun v -> v = '.'))
+  >> Array.mapi (fun i v -> i, v)
+  >> Array.filter (fun (_, v) -> v)
+  >> Array.map (fun (i, _) -> int64 i)
 
-let expandedCols =
-  [| for j in 0 .. (Array2D.length2 grid) - 1 ->
-       grid[0.., j] |> Array.forall (fun v -> v = '.') |]
-  |> Array.mapi (fun i v -> i, v)
-  |> Array.filter (fun (_, v) -> v)
-  |> Array.map (fun (i, _) -> int64 i)
+let expandedRows = fe [| for i in 0 .. (Array2D.length1 grid) - 1 -> grid[i, 0..] |]
+let expandedCols = fe [| for j in 0 .. (Array2D.length2 grid) - 1 -> grid[0.., j] |]
 
-let inline manahattan struct (x1, y1) struct (x2, y2) = abs (x1 - x2) + abs (y1 - y2)
+let inline manhattan struct (x1, y1) struct (x2, y2) = abs (x1 - x2) + abs (y1 - y2)
 
 let inline expand p slots factor =
   p + factor * (slots |> Array.filter (fun x -> x < p) |> Array.length |> int64)
@@ -46,7 +41,7 @@ let pairs =
 |> Array.iter (fun (part, factor) ->
   pairs
   |> Array.map (fun ((x1, y1), (x2, y2)) ->
-    manahattan
+    manhattan
       (expand x1 expandedRows factor, expand y1 expandedCols factor)
       (expand x2 expandedRows factor, expand y2 expandedCols factor))
   |> Array.sum
