@@ -54,7 +54,8 @@ let dfs pattern blocks =
             else
               true)
       then
-
+        // full match for the block, consume the pattern by the block size
+        // and compute matches from there
         total <- total + memo loop (pattern[blocks[0] + 1 ..]) (blocks[1..])
 
       total
