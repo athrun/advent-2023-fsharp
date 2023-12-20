@@ -4,14 +4,18 @@ let input =
   |> Array.map (fun l -> l.Split(' '))
 
 let memo =
-  let mutable m: Map<(char[] * int[]), int64> = Map.empty
+  let d = System.Collections.Generic.Dictionary<string, int64>()
 
-  let run f a b =
-    if m.ContainsKey(a, b) then
-      m.Item(a, b)
+  let run f (a: char array) (b: int array) =
+    let key =
+      (String.concat "" (Array.map string a))
+      + (String.concat "" (Array.map string b))
+
+    if d.ContainsKey(key) then
+      d.Item(key)
     else
       let r = f a b
-      m <- m.Add((a, b), r)
+      d.Add(key, r)
       r
 
   run
