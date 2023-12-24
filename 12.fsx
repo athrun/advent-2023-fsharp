@@ -6,7 +6,7 @@ let input =
 let memo =
   let d = System.Collections.Generic.Dictionary<string, int64>()
 
-  let run f (a: char array) (b: int array) =
+  let run f (a: char[]) (b: int[]) =
     let key =
       (String.concat "" (Array.map string a))
       + (String.concat "" (Array.map string b))
