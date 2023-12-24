@@ -37,12 +37,10 @@ let reflect predicate pattern =
   match x, y with
   | Some x, None -> Some x
   | None, Some y -> Some y
-  | Some x, Some y ->
-    // Two reflections found for pattern
-    if predicate x then Some x else Some y
-  | None, None ->
-    // No reflections found for pattern
-    None
+  // Two reflections found for pattern
+  | Some x, Some y -> if predicate x then Some x else Some y
+  // No reflections found for pattern
+  | None, None -> None
 
 let ways a2d =
   let mutable l = List.empty<bool array2d>
