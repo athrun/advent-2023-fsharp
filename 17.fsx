@@ -9,19 +9,20 @@ let input =
 let grid =
   Array2D.init input.Length input[0].Length (fun row col -> input[row][col])
 
-let nodes condition i j dir count grid =
+// Node is a tuple of (i, j, dir, count)
+type Node = (struct (int * int * int * int))
+
+let nodes condition struct(i,j,dir,count) grid =
   // produce valid adjacent nodes based on constraints
   // dir: N = 0, E = 1, S = 2, W = 3
   [| i - 1, j, 0, 0; i, j + 1, 1, 0; i + 1, j, 2, 0; i, j - 1, 3, 0 |]
   |> Array.indexed
   |> Array.filter (fun (i, _) ->
-    // prevents going back except
-    // start position can go anywhere
-    (dir = -1)
-    || (dir = 0 && i <> 2) // N can't go S
-    || (dir = 1 && i <> 3) // E can't go W
-    || (dir = 2 && i <> 0) // S can't go N
-    || (dir = 3 && i <> 1)) // W can't go E
+    (dir = -1) // start position can go anywhere
+    || (dir = 0 && i <> 2) // N can't go back S
+    || (dir = 1 && i <> 3) // E can't go back W
+    || (dir = 2 && i <> 0) // S can't go back N
+    || (dir = 3 && i <> 1)) // W can't go back E
   |> Array.map (fun (_, (ni, nj, ndir, ncount)) ->
     if dir = ndir then // if going in same dir, increase dir count
       ni, nj, ndir, count + 1
@@ -34,10 +35,8 @@ let nodes condition i j dir count grid =
     && nj <= (Array2D.length2 grid) - 1
     && (condition (i, j, dir, count) (ni, nj, ndir, ncount)))
 
-type Node = (struct (int * int * int * int))
-
-let dijkstra start goal adjacents (graph: int64 array2d) =
-  // djikstra's algorithm, using Uniform Cost Search (goal directed)
+let dijkstra start goal adjacents (grid: int64 array2d) =
+  // dijkstra's algorithm, using Uniform Cost Search (goal directed)
   let mutable dist = Dictionary<Node, int64>()
   let mutable q = PriorityQueue<Node, int64>()
   let si, sj = start
@@ -46,10 +45,10 @@ let dijkstra start goal adjacents (graph: int64 array2d) =
   q.Enqueue((si, sj, -1, 0), 0)
 
   while q.Count > 0 && not (goal (q.Peek())) do
-    let struct (ui, uj, udir, ucount) = q.Dequeue()
+    let u = q.Dequeue()
 
-    for (vi, vj, vdir, vcount) in adjacents ui uj udir ucount graph do
-      let alt = dist[struct (ui, uj, udir, ucount)] + graph[vi, vj]
+    for (vi, vj, vdir, vcount) in adjacents u grid do
+      let alt = dist[u] + grid[vi, vj]
 
       let cur =
         if dist.ContainsKey(struct (vi, vj, vdir, vcount)) then
@@ -65,12 +64,11 @@ let dijkstra start goal adjacents (graph: int64 array2d) =
 
 dijkstra
   (0, 0) // start node
-  (fun node -> // goal node
+  (fun node -> // goal condition
     let goal = Array2D.length1 grid - 1, Array2D.length2 grid - 1
     let struct (i, j, _, _) = node
     (i, j) = goal)
-  (nodes (fun s n -> // adjacent node filter
-    let (_, _, _, _) = s
+  (nodes (fun _ n -> // adjacent node filter
     let (_, _, _, ncount) = n
     // move a maximum of 3 consecutive blocks
     ncount < 3))
@@ -79,7 +77,7 @@ dijkstra
 
 dijkstra
   (0, 0) // start node
-  (fun node -> // goal node
+  (fun node -> // goal condition
     let goal = Array2D.length1 grid - 1, Array2D.length2 grid - 1
     let struct (i, j, _, count) = node
     (i, j) = goal && count >= 3)
