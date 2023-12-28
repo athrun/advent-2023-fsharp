@@ -34,8 +34,8 @@ let nodes condition struct (i, j, dir, count) grid =
 
 let dijkstra start goal adjacents (grid: int64 array2d) =
   // dijkstra's algorithm, using Uniform Cost Search (goal directed)
-  let mutable dist = Dictionary<Node, int64>()
-  let mutable q = PriorityQueue<Node, int64>()
+  let dist = Dictionary<Node, int64>()
+  let q = PriorityQueue<Node, int64>()
   let si, sj = start
 
   dist[struct (si, sj, -1, 0)] <- 0
