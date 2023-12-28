@@ -12,17 +12,14 @@ let grid =
 // Node is a tuple of (i, j, dir, count)
 type Node = (struct (int * int * int * int))
 
-let nodes condition struct(i,j,dir,count) grid =
+let nodes condition struct (i, j, dir, count) grid =
   // produce valid adjacent nodes based on constraints
   // dir: N = 0, E = 1, S = 2, W = 3
   [| i - 1, j, 0, 0; i, j + 1, 1, 0; i + 1, j, 2, 0; i, j - 1, 3, 0 |]
   |> Array.indexed
   |> Array.filter (fun (i, _) ->
     (dir = -1) // start position can go anywhere
-    || (dir = 0 && i <> 2) // N can't go back S
-    || (dir = 1 && i <> 3) // E can't go back W
-    || (dir = 2 && i <> 0) // S can't go back N
-    || (dir = 3 && i <> 1)) // W can't go back E
+    || (i <> (dir + 2) % 4)) // other dirs can't go back in the opposite way
   |> Array.map (fun (_, (ni, nj, ndir, ncount)) ->
     if dir = ndir then // if going in same dir, increase dir count
       ni, nj, ndir, count + 1
