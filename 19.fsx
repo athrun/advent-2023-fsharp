@@ -56,16 +56,15 @@ let rec workflow (part: int[]) (rules: Rules) (conds, action) =
       conds
 
   match r with
-  | None when action = "A" -> Some action // defer to last action in the block
+  | None when action = "A" -> Some part // defer to last action in the block
   | None when action <> "R" -> workflow part rules rules[action] // action is a label
-  | Some v when v = "A" -> Some v
+  | Some v when v = "A" -> Some part // defer to action in cond
   | Some v when v <> "R" -> workflow part rules rules[v]
   | _ -> None
 
 let accepted parts rules =
   parts
-  |> Array.map (fun p -> Option.map (fun _ -> p) (workflow p rules rules["in"]))
-  |> Array.choose id
+  |> Array.choose (fun p -> workflow p rules rules["in"])
   |> Array.collect id
   |> Array.sum
 
